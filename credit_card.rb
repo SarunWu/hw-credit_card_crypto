@@ -1,7 +1,10 @@
-require_relative './luhn_validator.rb'
+# frozen_string_literal: true
+
+require_relative './luhn_validator'
 require 'json'
 require 'digest'
 
+# Contain credit card information
 class CreditCard
   include LuhnValidator
 
@@ -16,13 +19,13 @@ class CreditCard
   end
 
   # returns json string
-  def to_json
+  def to_json(*arg)
     {
       number: @number,
       expiration_date: @expiration_date,
       owner: @owner,
       credit_network: @credit_network
-    }.to_json
+    }.to_json(*arg)
   end
 
   # returns all card information as single string
@@ -33,10 +36,10 @@ class CreditCard
   # return a new CreditCard object given a serialized (JSON) representation
   def self.from_s(card_s)
     card_hash = JSON.parse(card_s)
-    CreditCard.new(card_hash["number"],
-                   card_hash["expiration_date"],
-                   card_hash["owner"],
-                   card_hash["credit_network"])
+    CreditCard.new(card_hash['number'],
+                   card_hash['expiration_date'],
+                   card_hash['owner'],
+                   card_hash['credit_network'])
   end
 
   # return a hash of the serialized credit card object
@@ -49,4 +52,3 @@ class CreditCard
     Digest::SHA256.base64digest to_s
   end
 end
-
